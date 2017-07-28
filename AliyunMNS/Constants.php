@@ -29,6 +29,7 @@ class Constants
     const VISIBILITY_TIMEOUT = "VisibilityTimeout";
     const POLLING_WAIT_SECONDS = "PollingWaitSeconds";
     const MESSAGE_BODY = "MessageBody";
+    const MESSAGE_TAG = "MessageTag";
     const PRIORITY = "Priority";
     const MESSAGE_ID = "MessageId";
     const MESSAGE_BODY_MD5 = "MessageBodyMD5";
