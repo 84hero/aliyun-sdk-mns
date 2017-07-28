@@ -9,12 +9,15 @@
             "email": "wushunyi@vip.qq.com"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "require": {
         "php": ">=5.3.0",
         "guzzlehttp/guzzle": "^6.3",
         "ext-curl": "*",
-        "ext-openssl": "*"
+        "ext-openssl": "*",
+        "ext-dom": "*",
+        "ext-simplexml": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.8"
@@ -36,5 +39,10 @@
         "branch-alias": {
             "dev-master": "v1.3.5.1-dev"
         }
+    },    
+    "suggest": {
+        "ext-openssl": "Allows working with https",
+        "ext-curl": "To send requests using cURL",
+        "ext-json": "Parse json"
     }
 }
