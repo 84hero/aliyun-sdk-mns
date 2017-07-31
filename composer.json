@@ -1,6 +1,6 @@
 {
     "name": "wushunyi/aliyun-sdk-mns",
-    "description": "Aliyun MNS PHP SDK",
+    "description": "Aliyun MNS PHP SDK 阿里云官方 MNS composer包",
     "type": "library",
     "license": "MIT",
     "authors": [
