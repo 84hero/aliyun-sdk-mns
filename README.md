@@ -6,7 +6,7 @@ require_once "vendor/autoload.php";
 
 # 使用方法
 
-## 主题消息
+- 主题消息
 
 ```
 use AliyunMNS\Client;
@@ -39,7 +39,7 @@ catch (MnsException $e)
 }
 ```
 
-## 队列消息
+- 队列消息
 
 ```
 use AliyunMNS\Client;
