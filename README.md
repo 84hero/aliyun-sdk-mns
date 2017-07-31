@@ -1,77 +1,73 @@
 # 安装方法
+
+- 引用composer包
 ```
 composer require wushunyi/aliyun-sdk-mns
-
-require_once "vendor/autoload.php";
 ```
+
+- 代码引用composer自动加载工具
+
+```
+require_once "vendor/autoload.php";
+
+```
+
+- 实例化客户端
+```
+use AliyunMNS\Client;
+$client = new Client($endPoint, $accessId, $accessKey);
+
+```
+
 # 使用方法
 
-- 主题消息
+## 主题操作
 
-```
-use AliyunMNS\Client;
-use AliyunMNS\Requests\PublishMessageRequest;
+## 队列操作
 
-$endPoint = '';
-$accessId = '';
-$accessKey = '';
-$topicName = '';
+### 消息操作
 
-$client = new Client($endPoint, $accessId, $accessKey);
-$topic = $client->getTopicRef($topicName);
-$messageBody = 'test message';
-$messageTag = 'pay_success';
-// 1. 生成PublishMessageRequest
-// 1.1 如果是推送到邮箱，还需要设置MessageAttributes，可以参照Tests/TopicTest.php里面的testPublishMailMessage
-$request = new PublishMessageRequest($messageBody,$messageTag);
-try
-{
+- 发送消息
+
+    - 主题消息
+
+    ```
+    use AliyunMNS\Client;
+    use AliyunMNS\Requests\PublishMessageRequest;
+
+    $endPoint = '';
+    $accessId = '';
+    $accessKey = '';
+    $topicName = '';
+
+    $client = new Client($endPoint, $accessId, $accessKey);
+    $topic = $client->getTopicRef($topicName);//获取Topic地址
+    $messageBody = 'test message';  //消息内容
+    $messageTag = 'pay_success';    //消息标签
+    $request = new PublishMessageRequest($messageBody,$messageTag);
     $res = $topic->publishMessage($request);
-    // 2. PublishMessage成功
-    echo "MessagePublished! \n";
-}
-catch (MnsException $e)
-{
-    // 3. 可能因为网络错误等原因导致PublishMessage失败，这里CatchException并做对应处理
-    echo "PublishMessage Failed: " . $e . "\n";
-    echo "MNSErrorCode: " . $e->getMnsErrorCode() . "\n";
-    return;
-}
-```
+    $res->isSucceed();
+    ```
 
-- 队列消息
+    - 队列消息
+    ```
+    use AliyunMNS\Client;
+    use AliyunMNS\Requests\PublishMessageRequest;
 
-```
-use AliyunMNS\Client;
-use AliyunMNS\Requests\PublishMessageRequest;
+    $endPoint = '';
+    $accessId = '';
+    $accessKey = '';
+    $queueName = '';
 
-$endPoint = '';
-$accessId = '';
-$accessKey = '';
-$queueName = '';
-
-$client = new Client($endPoint, $accessId, $accessKey);
-$topic = $client->getQueueRef($queueName);//唯一不同之处
-$messageBody = 'test message';
-
-// 1. 生成PublishMessageRequest
-// 1.1 如果是推送到邮箱，还需要设置MessageAttributes，可以参照Tests/TopicTest.php里面的testPublishMailMessage
-// 队列消息不支持MessageTag属性
-$request = new PublishMessageRequest($messageBody);
-try
-{
+    $client = new Client($endPoint, $accessId, $accessKey);
+    $topic = $client->getQueueRef($queueName);//获取Topic地址
+    $messageBody = 'test message';  //消息内容
+    $request = new PublishMessageRequest($messageBody);
     $res = $topic->publishMessage($request);
-    // 2. PublishMessage成功
-    echo "MessagePublished! \n";
-}
-catch (MnsException $e)
-{
-    // 3. 可能因为网络错误等原因导致PublishMessage失败，这里CatchException并做对应处理
-    echo "PublishMessage Failed: " . $e . "\n";
-    echo "MNSErrorCode: " . $e->getMnsErrorCode() . "\n";
-    return;
-}
-```
+    $res->isSucceed();
+
+    ```
+
 
 # SDK核心代码来自阿里云官方
 
