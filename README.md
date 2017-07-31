@@ -1,9 +1,9 @@
 # 安装方法
-
+```
 composer require wushunyi/aliyun-sdk-mns
 
 require_once "vendor/autoload.php";
-
+```
 # 使用方法
 
 - 主题消息
