@@ -53,10 +53,11 @@ $queueName = '';
 $client = new Client($endPoint, $accessId, $accessKey);
 $topic = $client->getQueueRef($queueName);//唯一不同之处
 $messageBody = 'test message';
-$messageTag = 'pay_success';
+
 // 1. 生成PublishMessageRequest
 // 1.1 如果是推送到邮箱，还需要设置MessageAttributes，可以参照Tests/TopicTest.php里面的testPublishMailMessage
-$request = new PublishMessageRequest($messageBody,$messageTag);
+// 队列消息不支持MessageTag属性
+$request = new PublishMessageRequest($messageBody);
 try
 {
     $res = $topic->publishMessage($request);
