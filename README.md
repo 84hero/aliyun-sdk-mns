@@ -1,6 +1,7 @@
 # Aliyun MNS PHP SDK
 
 [![Latest Stable Version](https://poser.pugx.org/wushunyi/aliyun-sdk-mns/version)](https://packagist.org/packages/wushunyi/aliyun-sdk-mns)
+[![Build Status](https://travis-ci.org/84hero/aliyun-sdk-mns.svg?branch=master)](https://travis-ci.org/84hero/aliyun-sdk-mns)
 [![Total Downloads](https://poser.pugx.org/wushunyi/aliyun-sdk-mns/downloads)](https://packagist.org/packages/wushunyi/aliyun-sdk-mns)
 [![Latest Unstable Version](https://poser.pugx.org/wushunyi/aliyun-sdk-mns/v/unstable)](//packagist.org/packages/wushunyi/aliyun-sdk-mns)
 [![License](https://poser.pugx.org/wushunyi/aliyun-sdk-mns/license)](https://packagist.org/packages/wushunyi/aliyun-sdk-mns)
