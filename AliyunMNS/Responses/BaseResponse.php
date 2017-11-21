@@ -1,11 +1,13 @@
 <?php
 namespace AliyunMNS\Responses;
 use AliyunMNS\Exception\MnsException;
+use AliyunMNS\Traits\AttributesToArray;
 
 abstract class BaseResponse
 {
     protected $succeed;
     protected $statusCode;
+    use AttributesToArray;
 
     abstract public function parseResponse($statusCode, $content);
 
