@@ -18,16 +18,27 @@ class SubscriptionAttributes
     private $createTime;
     private $lastModifyTime;
 
+    #by wushunyi@vip.qq.com
+    private $FilterTag;//描述了该订阅中消息过滤的标签（仅标签一致的消息才会被推送）
+    private $Subscriber;// Subscription 订阅者的 AccountId
+    private $NotifyContentFormat;//向 Endpoint 推送的消息内容格式
+    private $NotifyStrategy;//向 Endpoint 推送消息错误时的重试策略
+
+
     public function __construct(
-        $subscriptionName = NULL,
-        $endpoint = NULL,
-        $strategy = NULL,
-        $contentFormat = NULL,
-        $topicName = NULL,
-        $topicOwner = NULL,
-        $createTime = NULL,
-        $lastModifyTime = NULL)
-    {
+        $subscriptionName = null,
+        $endpoint = null,
+        $strategy = null,
+        $contentFormat = null,
+        $topicName = null,
+        $topicOwner = null,
+        $createTime = null,
+        $lastModifyTime = null,
+        $filterTag = null,
+        $Subscriber = null,
+        $NotifyContentFormat = null,
+        $NotifyStrategy = null
+    ) {
         $this->endpoint = $endpoint;
         $this->strategy = $strategy;
         $this->contentFormat = $contentFormat;
@@ -38,9 +49,133 @@ class SubscriptionAttributes
 
         $this->topicOwner = $topicOwner;
         $this->createTime = $createTime;
-        $this->lastModifyTime = $lastModifyTime; 
+        $this->lastModifyTime = $lastModifyTime;
+        $this->FilterTag = $filterTag;
+        $this->Subscriber = $Subscriber;
+        $this->NotifyStrategy = $NotifyStrategy;
+        $this->NotifyContentFormat = $NotifyContentFormat;
     }
-    
+
+    static public function fromXML(\XMLReader $xmlReader)
+    {
+        $endpoint = null;
+        $strategy = null;
+        $contentFormat = null;
+        $topicOwner = null;
+        $topicName = null;
+        $createTime = null;
+        $lastModifyTime = null;
+        $filterTag = null;
+        $Subscriber = null;
+        $NotifyContentFormat = null;
+        $NotifyStrategy = null;
+        while ($xmlReader->read()) {
+            if ($xmlReader->nodeType == \XMLReader::ELEMENT) {
+                switch ($xmlReader->name) {
+                    case 'TopicOwner':
+                        $xmlReader->read();
+                        if ($xmlReader->nodeType == \XMLReader::TEXT) {
+                            $topicOwner = $xmlReader->value;
+                        }
+                        break;
+                    case 'TopicName':
+                        $xmlReader->read();
+                        if ($xmlReader->nodeType == \XMLReader::TEXT) {
+                            $topicName = $xmlReader->value;
+                        }
+                        break;
+                    case 'SubscriptionName':
+                        $xmlReader->read();
+                        if ($xmlReader->nodeType == \XMLReader::TEXT) {
+                            $subscriptionName = $xmlReader->value;
+                        }
+                    case 'Endpoint':
+                        $xmlReader->read();
+                        if ($xmlReader->nodeType == \XMLReader::TEXT) {
+                            $endpoint = $xmlReader->value;
+                        }
+                        break;
+                    case 'NotifyStrategy':
+                        $xmlReader->read();
+                        if ($xmlReader->nodeType == \XMLReader::TEXT) {
+                            $strategy = $xmlReader->value;
+                        }
+                        break;
+                    case 'NotifyContentFormat':
+                        $xmlReader->read();
+                        if ($xmlReader->nodeType == \XMLReader::TEXT) {
+                            $contentFormat = $xmlReader->value;
+                        }
+                        break;
+                    case 'CreateTime':
+                        $xmlReader->read();
+                        if ($xmlReader->nodeType == \XMLReader::TEXT) {
+                            $createTime = $xmlReader->value;
+                        }
+                        break;
+                    case 'LastModifyTime':
+                        $xmlReader->read();
+                        if ($xmlReader->nodeType == \XMLReader::TEXT) {
+                            $lastModifyTime = $xmlReader->value;
+                        }
+                        break;
+                    case 'FilterTag':
+                        $xmlReader->read();
+                        if ($xmlReader->nodeType == \XMLReader::TEXT) {
+                            $filterTag = $xmlReader->value;
+                        }
+                        break;
+                    case 'Subscriber':
+                        $xmlReader->read();
+                        if ($xmlReader->nodeType == \XMLReader::TEXT) {
+                            $Subscriber = $xmlReader->value;
+                        }
+                        break;
+                    case 'NotifyStrategy':
+                        $xmlReader->read();
+                        if ($xmlReader->nodeType == \XMLReader::TEXT) {
+                            $NotifyStrategy = $xmlReader->value;
+                        }
+                        break;
+                    case 'NotifyContentFormat':
+                        $xmlReader->read();
+                        if ($xmlReader->nodeType == \XMLReader::TEXT) {
+                            $NotifyContentFormat = $xmlReader->value;
+                        }
+                        break;
+                }
+            }
+        }
+
+        $attributes = new SubscriptionAttributes(
+            $subscriptionName,
+            $endpoint,
+            $strategy,
+            $contentFormat,
+            $topicName,
+            $topicOwner,
+            $createTime,
+            $lastModifyTime,
+            $filterTag,
+            $Subscriber,
+            $NotifyContentFormat,
+            $NotifyStrategy
+        );
+
+        return $attributes;
+    }
+
+    public function __call( $method, $arg_array)
+    {
+
+        if(strpos($method,'get') === 0){
+            $properlyName = substr($method,3);
+            if(isset($this->$properlyName)){
+                return $this->$properlyName;
+            }
+        }
+    }
+
     public function getEndpoint()
     {
         return $this->endpoint;
@@ -103,104 +238,16 @@ class SubscriptionAttributes
 
     public function writeXML(\XMLWriter $xmlWriter)
     {
-        if ($this->endpoint != NULL)
-        {
+        if ($this->endpoint != null) {
             $xmlWriter->writeElement(Constants::ENDPOINT, $this->endpoint);
         }
-        if ($this->strategy != NULL)
-        {
+        if ($this->strategy != null) {
             $xmlWriter->writeElement(Constants::STRATEGY, $this->strategy);
         }
-        if ($this->contentFormat != NULL)
-        {
-            $xmlWriter->writeElement(Constants::CONTENT_FORMAT, $this->contentFormat);
+        if ($this->contentFormat != null) {
+            $xmlWriter->writeElement(Constants::CONTENT_FORMAT,
+                $this->contentFormat);
         }
-    }
-
-    static public function fromXML(\XMLReader $xmlReader)
-    {
-        $endpoint = NULL;
-        $strategy = NULL;
-        $contentFormat = NULL;
-        $topicOwner = NULL;
-        $topicName = NULL;
-        $createTime = NULL;
-        $lastModifyTime = NULL;
-
-        while ($xmlReader->read())
-        {
-            if ($xmlReader->nodeType == \XMLReader::ELEMENT)
-            {
-                switch ($xmlReader->name) {
-                case 'TopicOwner':
-                    $xmlReader->read();
-                    if ($xmlReader->nodeType == \XMLReader::TEXT)
-                    {
-                        $topicOwner = $xmlReader->value;
-                    }
-                    break;
-                case 'TopicName':
-                    $xmlReader->read();
-                    if ($xmlReader->nodeType == \XMLReader::TEXT)
-                    {
-                        $topicName = $xmlReader->value;
-                    }
-                    break;
-                case 'SubscriptionName':
-                    $xmlReader->read();
-                    if ($xmlReader->nodeType == \XMLReader::TEXT)
-                    {
-                        $subscriptionName = $xmlReader->value;
-                    }
-                case 'Endpoint':
-                    $xmlReader->read();
-                    if ($xmlReader->nodeType == \XMLReader::TEXT)
-                    {
-                        $endpoint = $xmlReader->value;
-                    }
-                    break;
-                case 'NotifyStrategy':
-                    $xmlReader->read();
-                    if ($xmlReader->nodeType == \XMLReader::TEXT)
-                    {
-                        $strategy = $xmlReader->value;
-                    }
-                    break;
-                case 'NotifyContentFormat':
-                    $xmlReader->read();
-                    if ($xmlReader->nodeType == \XMLReader::TEXT)
-                    {
-                        $contentFormat = $xmlReader->value;
-                    }
-                    break;
-                case 'CreateTime':
-                    $xmlReader->read();
-                    if ($xmlReader->nodeType == \XMLReader::TEXT)
-                    {
-                        $createTime = $xmlReader->value;
-                    }
-                    break;
-                case 'LastModifyTime':
-                    $xmlReader->read();
-                    if ($xmlReader->nodeType == \XMLReader::TEXT)
-                    {
-                        $lastModifyTime = $xmlReader->value;
-                    }
-                    break;
-                }
-            }
-        }
-
-        $attributes = new SubscriptionAttributes(
-            $subscriptionName,
-            $endpoint,
-            $strategy,
-            $contentFormat,
-            $topicName,
-            $topicOwner,
-            $createTime,
-            $lastModifyTime);
-        return $attributes;
     }
 }
 
